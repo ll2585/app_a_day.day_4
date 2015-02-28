@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="roles">
+        <item>random</item>
+        <item>merlin</item>
+        <item>percival</item>
+        <item>vanilla blue</item>
+        <item>morgana</item>
+        <item>mordred</item>
+        <item>assassin</item>
+    </string-array>
+</resources>

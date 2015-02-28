@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +27,55 @@ import java.util.logging.Handler;
 public class MainActivity extends ActionBarActivity {
     private Model m;
     private HashMap<String, TextView> userIDTextMap;
+    private String desiredRole;
+    private Spinner roleSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addItemsToRoleSpinner();
+        addListenerToRoleSpinner();
+        desiredRole = "random";
         generateRoles();
     }
 
+    public void addItemsToRoleSpinner(){
+        // Get a reference to the spinner
+        roleSpinner = (Spinner) findViewById(R.id.role_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> roleSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.roles, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        roleSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        roleSpinner.setAdapter(roleSpinnerAdapter);
+    }
+
+    public void addListenerToRoleSpinner() {
+        roleSpinner = (Spinner) findViewById(R.id.role_spinner);
+        roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3)
+            {
+                // Get the item selected in the Spinner
+                String itemSelectedInSpinner = parent.getItemAtPosition(pos).toString();
+
+                // Verify if I'm converting from teaspoon so that I use the right
+                // conversion algorithm
+                if(itemSelectedInSpinner.equals("vanilla blue")){
+                    itemSelectedInSpinner = "vanilla_blue_1";
+                }
+
+                desiredRole = itemSelectedInSpinner;
+
+            }
+            public void onNothingSelected(AdapterView<?> arg0)
+            {
+                // TODO maybe add something here later
+                desiredRole = "random";
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
         userIDTextMap.put("player_7", (TextView) findViewById(R.id.player7_name));
         userIDTextMap.get("player_7").setText(random_name);
 
-        m.assignRoles();
+        m.assignRoles(desiredRole);
 
     }
 
@@ -120,6 +164,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void onClickRegenerateRoles(View view) {
         generateRoles();
+        onShowRolesClick(view);
     }
 
     public void onShowRolesClick(View view) {

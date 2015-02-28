@@ -59,7 +59,7 @@ public class Model {
         return this.players.size();
     }
 
-    public void assignRoles(){
+    public void assignRoles(String playerRole){
         availableRoles = new ArrayList<Role>();
         availableRoles.add(possibleRoles.get("merlin"));
         availableRoles.add(possibleRoles.get("assassin"));
@@ -68,10 +68,30 @@ public class Model {
         availableRoles.add(possibleRoles.get("morgana"));
         availableRoles.add(possibleRoles.get("mordred"));
         availableRoles.add(possibleRoles.get("vanilla_blue_2"));
-
+        int player_index = -1;
+        int desired_index = -1;
         Collections.shuffle(availableRoles);
-        for(int i = 0; i < this.players.size(); i++){
-            this.players.get(i).setRole(availableRoles.get(i));
+        System.out.println(playerRole + " desired");
+        if(!playerRole.equals("random")) {
+            for (int i = 0; i < this.players.size(); i++) {
+                if(this.players.get(i).getId().equals("youID")){
+                    player_index = i;
+                }
+            }
+            for (int i = 0; i < availableRoles.size(); i++) {
+                if(availableRoles.get(i)== possibleRoles.get(playerRole)){
+                    desired_index = i;
+                }
+            }
+        }
+        for (int i = 0; i < this.players.size(); i++) {
+            if(i == player_index){
+                this.players.get(player_index).setRole(availableRoles.get(desired_index));
+            }else if (i == desired_index){
+                this.players.get(desired_index).setRole(availableRoles.get(player_index));
+            }else {
+                this.players.get(i).setRole(availableRoles.get(i));
+            }
         }
 
         possibleRoles.get("merlin").setKnowledge(getKnowledgeString("merlin"), getKnowledgeIDs("merlin"));
